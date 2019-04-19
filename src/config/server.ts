@@ -6,6 +6,10 @@ import logger = require("morgan");
 import helmet = require("helmet");
 import cors = require("cors");
 
+import { NextFunction, Request, Response } from "express";
+
+import PaintingRouter from '../routers/painting.router';
+
 // Require dotenv
 require('dotenv').config();
 
@@ -25,7 +29,9 @@ class Server {
         this.routes();
     }
 
-    public models() { }
+    public models() {
+        require('../models/Painting');
+    }
 
     public config() {
 
@@ -54,13 +60,13 @@ class Server {
         let router: express.Router;
         router = express.Router();
 
-        router.get('/api', (req, res, next) => {
+        router.get('/', (req: Request, res: Response, next: NextFunction) => {
             res.json({
                 message: 'Welcome to Museo !'
             });
         });
 
-        this.app.use('/', router);
+        this.app.use('/paintings', PaintingRouter);
     }
 
     private mongoSetup(): void {
